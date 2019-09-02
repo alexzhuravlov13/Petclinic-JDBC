@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ClientDAO implements DAO<Client>
 {
-  private static final String INSERT_ADDRESS_SQL = "INSERT INTO client (name, surname, birthDate, phoneNr, address) VALUES (?, ?, ?, ?, ?)";
+  private static final String INSERT_CLIENT_SQL = "INSERT INTO client (name, surname, birthDate, phoneNr, address) VALUES (?, ?, ?, ?, ?)";
   private static final String SELECT_CLIENT_SQL = "SELECT c.clientId, c.name, c.surname, c.birthDate, c.phoneNr, c.address, a.addressId, a.street, a.houseNr, a.apartmentNr, a.zip, p.petId, p.petName, p.petBirthDate, p.type, p.masterId " +
                                                   "FROM client c " +
                                                   "INNER JOIN address a on c.address = a.addressId " +
@@ -22,8 +22,8 @@ public class ClientDAO implements DAO<Client>
                                                         "FROM client c " +
                                                         "INNER JOIN address a on c.address = a.addressId " +
                                                         "INNER JOIN pet p";
-  private static final String UPDATE_CLIENT= "UPDATE client SET street=?, houseNr=?, apartmentNr=?, zip=? WHERE id=?";
-  private static final String DELETE_ADDRESS = "DELETE FROM address WHERE id=?";
+  private static final String UPDATE_CLIENT= "UPDATE client SET name=?, surname=?, birthDate=?, phoneNr=?, aID=? WHERE id=?";
+  private static final String DELETE_CLIENT = "DELETE FROM client WHERE id=?";
 
 
 
@@ -32,7 +32,7 @@ public class ClientDAO implements DAO<Client>
 
     try (Connection connection = DbUtil.getConnection())
     {
-      PreparedStatement ps = connection.prepareStatement(INSERT_ADDRESS_SQL);
+      PreparedStatement ps = connection.prepareStatement(INSERT_CLIENT_SQL);
       ps.setString(1, client.getName());
       ps.setString(2, client.getSurname());
       ps.setDate(3, client.getBirthDate());
@@ -151,11 +151,44 @@ public class ClientDAO implements DAO<Client>
 
   @Override
   public boolean update(Client client) {
-    return false;
+    boolean update = false;
+
+    try (Connection connection = DbUtil.getConnection())
+    {
+      PreparedStatement ps = connection.prepareStatement(UPDATE_CLIENT);
+      ps.setString(1, client.getName());
+      ps.setString(2, client.getSurname());
+      ps.setDate(3, client.getBirthDate());
+      ps.setString(4, client.getPhoneNr());
+      ps.setLong(5, client.getAddress().getId());
+
+      ps.executeUpdate();
+      update = true;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      update = false;
+    }
+    return update;
   }
 
   @Override
   public boolean delete(Client client) {
-    return false;
+
+    boolean delete = false;
+    try (Connection connection = DbUtil.getConnection())
+    {
+      PreparedStatement ps = connection.prepareStatement(DELETE_CLIENT);
+      ps.setLong(1, client.getId() );
+      ps.executeUpdate();
+      delete = true;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      delete = false;
+    }
+    return delete;
   }
 }
