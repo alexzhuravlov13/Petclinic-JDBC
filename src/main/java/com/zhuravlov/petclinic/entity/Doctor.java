@@ -1,7 +1,8 @@
 package com.zhuravlov.petclinic.entity;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
+import java.util.List;
 
 public class Doctor
 {
@@ -10,9 +11,9 @@ public class Doctor
   private String surname;
   private Date birthDate;
   private String phoneNr;
-  private ArrayList<Pet> patients;
+  private List<Pet> patients;
 
-  public Doctor(Long id, String name, String surname, Date birthDate, String phoneNr, ArrayList<Pet> patients)
+  public Doctor(Long id, String name, String surname, Date birthDate, String phoneNr, List<Pet> patients)
   {
     this.id = id;
     this.name = name;
@@ -56,7 +57,7 @@ public class Doctor
     return phoneNr;
   }
 
-  public ArrayList<Pet> getPatients()
+  public List<Pet> getPatients()
   {
     return patients;
   }
@@ -86,7 +87,7 @@ public class Doctor
     this.phoneNr = phoneNr;
   }
 
-  public void setPatients(ArrayList<Pet> patients)
+  public void setPatients(List<Pet> patients)
   {
     this.patients = patients;
   }

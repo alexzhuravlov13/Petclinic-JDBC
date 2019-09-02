@@ -1,6 +1,6 @@
 package com.zhuravlov.petclinic.entity;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Visit
 {
